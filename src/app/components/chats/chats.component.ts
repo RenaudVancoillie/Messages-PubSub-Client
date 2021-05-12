@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Chat } from '../../interfaces/chat';
+import { Chat } from 'src/app/interfaces/chat';
+import { CHATS } from '../../data/mock-chats';
 
 @Component({
   selector: 'app-chats',
@@ -9,15 +10,17 @@ import { Chat } from '../../interfaces/chat';
 })
 export class ChatsComponent implements OnInit {
 
-  chat: Chat = {
-    id: 1,
-    guid: "7F08D5CB-C6DF-4A24-B7E1-CB1E9C0CB320",
-    name: "Algemeen"
-  }
+  chats = CHATS;
+
+  selectedChat?: Chat;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onSelect(chat: Chat): void {
+    this.selectedChat = chat;
   }
 
 }
