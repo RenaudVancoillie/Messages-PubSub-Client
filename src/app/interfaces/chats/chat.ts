@@ -1,4 +1,4 @@
-export class Chat {
+export interface Chat {
     id: number;
     guid: string;
     name: string;

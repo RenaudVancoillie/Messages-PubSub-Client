@@ -1,0 +1,12 @@
+<div>
+    <label for="chat-name">Chat name: </label>
+    <input id="chat-name" [(ngModel)]="name" placeholder="name">
+    <button (click)="createChat()">Create chat!</button>
+</div>
+<div *ngIf="chats">
+    <ul class="chats">
+        <li *ngFor="let chat of chats" (click)="onSelect(chat)"
+        [class.selected]="chat === selectedChat">{{chat.name}}</li>
+    </ul>
+    <app-chat *ngIf="selectedChat"></app-chat>
+</div>

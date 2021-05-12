@@ -1,4 +1,4 @@
-import { Chat } from '../interfaces/chat';
+import { Chat } from '../interfaces/chats/chat';
 
 export const CHATS: Chat[] = [
     {

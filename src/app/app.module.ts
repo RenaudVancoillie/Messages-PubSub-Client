@@ -1,16 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { ChatsComponent } from './components/chats/chats.component';
+import { ChatsComponent } from './components/chats/list/chats.component';
+import { ChatComponent } from './components/chats/details/chat.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatsComponent
+    ChatsComponent,
+    ChatComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
