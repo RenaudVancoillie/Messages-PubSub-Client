@@ -8,5 +8,5 @@
         <li *ngFor="let chat of chats" (click)="onSelect(chat)"
         [class.selected]="chat === selectedChat">{{chat.name}}</li>
     </ul>
-    <app-chat *ngIf="selectedChat"></app-chat>
+    <app-chat [chat]="selectedChat"></app-chat>
 </div>
