@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 
 import { Chat } from 'src/app/interfaces/chats/chat';
 import { ChatWithMessages } from 'src/app/interfaces/chats/chatWithMessages';
@@ -10,11 +10,18 @@ import { ChatWithMessages } from 'src/app/interfaces/chats/chatWithMessages';
 })
 export class ChatComponent implements OnInit {
 
-  @Input() chat?: Chat;
+  @Input() chatId?: number;
+
+  chat?: Chat;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.chatId = changes.chatId.currentValue;
+    console.log(this.chatId);
   }
 
 }
