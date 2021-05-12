@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Chat } from 'src/app/interfaces/chats/chat';
-import { CHATS } from '../../../data/mock-chats';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-chats',
@@ -10,19 +10,25 @@ import { CHATS } from '../../../data/mock-chats';
 })
 export class ChatsComponent implements OnInit {
 
-  chats = CHATS;
+  chats: Chat[] = [];
 
   selectedChat?: Chat;
   
   name?: string = '';
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
+    this.getChats();
   }
 
   onSelect(chat: Chat): void {
     this.selectedChat = chat;
+  }
+
+  getChats(): void {
+    this.chatService.getChats()
+      .subscribe(chats => this.chats = chats);
   }
 
   createChat(): void {
