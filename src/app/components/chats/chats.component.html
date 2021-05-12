@@ -1,2 +1,5 @@
-<p>chats works!</p>
-<h2>{{chat}}</h2>
+<div *ngIf="chat">
+    <ul>
+        <li>{{chat.name}}</li>
+    </ul>
+</div>
