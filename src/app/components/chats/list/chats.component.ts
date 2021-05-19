@@ -3,7 +3,10 @@ import { Subscription } from 'rxjs';
 
 import { Chat } from 'src/app/interfaces/chats/chat';
 import { ChatWithMessages } from 'src/app/interfaces/chats/chatWithMessages';
+import { Message } from 'src/app/interfaces/messages/Message';
+
 import { ChatService } from 'src/app/services/chats/chat.service';
+import { MessageService } from 'src/app/services/messages/message.service';
 
 @Component({
   selector: 'app-chats',
@@ -13,6 +16,8 @@ import { ChatService } from 'src/app/services/chats/chat.service';
 export class ChatsComponent implements OnInit {
 
   private createdChatSubscription: Subscription;
+  
+  private createdMessageSubscription: Subscription;
 
   chats: Chat[] = [];
 
@@ -20,14 +25,22 @@ export class ChatsComponent implements OnInit {
   
   name: string = '';
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService,
+              private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.chatService.connect();
 
     this.createdChatSubscription = this.chatService.receiveChat.subscribe((chat: Chat) => {
-      this.chats.push(chat);
+      this.chats.unshift(chat);
       this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
+    });
+
+    this.createdMessageSubscription = this.messageService.receiveMessage.subscribe((message: Message) => {
+      if(this.selectedChat !== null && this.selectedChat.id === message.chatId)
+      {
+        this.selectedChat.messages.push(message);
+      }
     });
 
     this.getChats();
@@ -35,6 +48,9 @@ export class ChatsComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.createdChatSubscription.unsubscribe();
+    this.createdMessageSubscription.unsubscribe();
+    
+    this.chatService.disconnect();
   }
 
   onSelect(chat: Chat): void {
