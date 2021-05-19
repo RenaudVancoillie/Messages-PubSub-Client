@@ -1,1 +1,8 @@
-<p>chat works!</p>
+<div *ngIf="chat">
+    <h2>{{chat.name}}</h2>
+    <div class="messages">
+        <ul>
+            <li *ngFor="let message of chat.messages">{{message.sender}}: {{message.text}}</li>
+        </ul>
+    </div>
+</div>

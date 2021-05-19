@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { Chat } from 'src/app/interfaces/chats/chat';
+import { ChatWithMessages } from 'src/app/interfaces/chats/chatWithMessages';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -10,20 +12,33 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class ChatsComponent implements OnInit {
 
+  private createdChatSubscription: Subscription;
+
   chats: Chat[] = [];
 
-  selectedChat?: Chat;
+  selectedChat?: ChatWithMessages;
   
-  name?: string = '';
+  name: string = '';
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
+    this.chatService.connect();
+
+    this.createdChatSubscription = this.chatService.receiveChat.subscribe((chat: Chat) => {
+      this.chats.push(chat);
+      this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
+    });
+
     this.getChats();
   }
 
+  ngOnDestroy(): void {
+    this.createdChatSubscription.unsubscribe();
+  }
+
   onSelect(chat: Chat): void {
-    this.selectedChat = chat;
+    this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
   }
 
   getChats(): void {
@@ -32,7 +47,7 @@ export class ChatsComponent implements OnInit {
   }
 
   createChat(): void {
-    console.log(this.name);
+    this.chatService.createChat(this.name); // WARN: INPUT VALIDATION
   }
 
 }
