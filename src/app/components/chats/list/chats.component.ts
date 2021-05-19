@@ -18,6 +18,8 @@ export class ChatsComponent implements OnInit {
   private createdChatSubscription: Subscription;
   
   private createdMessageSubscription: Subscription;
+  private updatedMessageSubscription: Subscription;
+  private deletedMessageSubscription: Subscription;
 
   chats: Chat[] = [];
 
@@ -36,10 +38,25 @@ export class ChatsComponent implements OnInit {
       this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
     });
 
-    this.createdMessageSubscription = this.messageService.receiveMessage.subscribe((message: Message) => {
-      if(this.selectedChat !== null && this.selectedChat.id === message.chatId)
-      {
+    this.createdMessageSubscription = this.messageService.receiveMessageCreatedEvent.subscribe((message: Message) => {
+      console.log("receiveMessageCreatedEvent");  // TODO: remove log!
+      if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
         this.selectedChat.messages.push(message);
+      }
+    });
+
+    this.updatedMessageSubscription = this.messageService.receiveMessageUpdatedEvent.subscribe((message: Message) => {
+      console.log("receiveMessageUpdatedEvent");  // TODO: remove log!
+      if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
+        let index = this.selectedChat.messages.findIndex(m => m.id === message.id);
+        this.selectedChat.messages[index] = message;
+      }
+    });
+
+    this.deletedMessageSubscription = this.messageService.receiveMessageDeletedEvent.subscribe((message: Message) => {
+      console.log("receiveMessageDeletedEvent");  // TODO: remove log!
+      if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
+        this.selectedChat.messages.filter(m => m.id === message.id).pop();
       }
     });
 
@@ -48,7 +65,10 @@ export class ChatsComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.createdChatSubscription.unsubscribe();
+    
     this.createdMessageSubscription.unsubscribe();
+    this.updatedMessageSubscription.unsubscribe();
+    this.deletedMessageSubscription.unsubscribe();
     
     this.chatService.disconnect();
   }

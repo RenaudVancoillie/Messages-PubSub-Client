@@ -12,10 +12,14 @@ export class MessageService {
   private hub: string = 'https://localhost:44354';
   private hubConnection: signalR.HubConnection;
 
-  public receiveMessage: Subject<Message>;
+  public receiveMessageCreatedEvent: Subject<Message>;
+  public receiveMessageUpdatedEvent: Subject<Message>;
+  public receiveMessageDeletedEvent: Subject<Message>;
 
   constructor() { 
-    this.receiveMessage = new Subject();
+    this.receiveMessageCreatedEvent = new Subject();
+    this.receiveMessageUpdatedEvent = new Subject();
+    this.receiveMessageDeletedEvent = new Subject();
   }
 
   public connect(): void {
@@ -25,9 +29,16 @@ export class MessageService {
       .build();
 
     this.hubConnection.on("MessageCreatedEvent", (message: Message) => {
-      console.log("MessageCreatedEvent");
-      this.receiveMessage.next(message);
+      this.receiveMessageCreatedEvent.next(message);
     });
+
+    this.hubConnection.on("MessageUpdatedEvent", (message: Message) => {
+      this.receiveMessageUpdatedEvent.next(message);
+    });
+
+    this.hubConnection.on("MessageDeletedEvent", (message: Message) => {
+      this.receiveMessageDeletedEvent.next(message);
+    })
     
     this.hubConnection.start()
       .then(() => console.log("Connected with the messages hub!"))
@@ -42,6 +53,14 @@ export class MessageService {
 
   public sendMessage(channel: string, message: any): void {
     this.hubConnection.send("Create", channel, message);
+  }
+
+  public updateMessage(channel: string, message: Message): void {
+    this.hubConnection.send("Update", channel, message);
+  }
+
+  public deleteMessage(channel: string, id: number): void {
+    this.hubConnection.send("Delete", channel, id);
   }
 
 }
