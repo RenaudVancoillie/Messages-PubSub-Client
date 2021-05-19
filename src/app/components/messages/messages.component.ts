@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class MessagesComponent implements OnInit {
 
+  @Input() chatId?: number;
   @Input() channel?: string;
 
   name: string = '';

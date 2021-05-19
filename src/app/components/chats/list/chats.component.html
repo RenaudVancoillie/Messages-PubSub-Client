@@ -9,5 +9,5 @@
         [class.selected]="selectedChat && chat.id === selectedChat.id">{{chat.name}}</li>
     </ul>
     <app-chat *ngIf="selectedChat" [chat]="selectedChat"></app-chat>
-    <app-messages *ngIf="selectedChat" [channel]="selectedChat.guid"></app-messages>
+    <app-messages *ngIf="selectedChat" [chatId]="selectedChat.id" [channel]="selectedChat.guid"></app-messages>
 </div>

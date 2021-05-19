@@ -38,7 +38,9 @@ export class ChatService {
   }
 
   public disconnect(): void {
-    this.hubConnection.stop();
+    this.hubConnection.stop()
+      .then(() => console.log("Disonnected from the chat hub!"))
+      .catch(error => console.error("Error while trying to disconnect from the app hub: ", error));
   }
 
   public getChats(): Observable<Chat[]> {
@@ -53,6 +55,14 @@ export class ChatService {
     return this.http.get<ChatWithMessages>(endpoint).pipe(
       catchError(this.handleError<ChatWithMessages>(`getChat id=${id}`))
     );
+  }
+
+  public subscribe(channel: string): void {
+    this.hubConnection.send("Subscribe", channel);
+  }
+
+  public unsubscribe(channel: string): void {
+    this.hubConnection.send("Unsubscribe", channel);
   }
 
   public createChat(name: string): void {
