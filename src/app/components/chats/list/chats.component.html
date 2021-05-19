@@ -6,7 +6,7 @@
 <div *ngIf="chats">
     <ul class="chats">
         <li *ngFor="let chat of chats" (click)="onSelect(chat)"
-        [class.selected]="chat === selectedChat">{{chat.name}}</li>
+        [class.selected]="selectedChat && chat.id === selectedChat.id">{{chat.name}}</li>
     </ul>
-    <app-chat *ngIf="selectedChat" [chatId]="selectedChat.id"></app-chat>
+    <app-chat *ngIf="selectedChat" [chat]="selectedChat"></app-chat>
 </div>
