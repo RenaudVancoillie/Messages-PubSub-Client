@@ -2,7 +2,14 @@
     <h2>{{chat.name}}</h2>
     <div class="messages">
         <ul>
-            <li *ngFor="let message of chat.messages">{{message.sender}}: {{message.text}}</li>
+            <li *ngFor="let message of chat.messages">{{message.sender}}: {{message.text}}
+                <div *ngIf="editing && message.id == editingId">
+                    <input type="text" [(ngModel)]="message.text" name="text" id="text" />
+                    <button (click)="updateMessage(message)">Save</button>
+                </div>
+                <i *ngIf="!editing" (click)="startEditing(message)" class="material-icons">edit</i>
+                <i (click)="deleteMessage(message)" class="material-icons">delete</i>
+            </li>
         </ul>
     </div>
 </div>

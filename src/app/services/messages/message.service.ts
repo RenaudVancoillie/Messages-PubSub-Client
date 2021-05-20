@@ -20,6 +20,8 @@ export class MessageService {
     this.receiveMessageCreatedEvent = new Subject();
     this.receiveMessageUpdatedEvent = new Subject();
     this.receiveMessageDeletedEvent = new Subject();
+
+    this.connect();
   }
 
   public connect(): void {
@@ -49,6 +51,16 @@ export class MessageService {
     this.hubConnection.stop()
       .then(() => console.log("Disconnected from the messages hub!"))
       .catch(error => console.error("Error while trying to disconnect from the messages hub: ", error));
+  }
+
+  public subscribe(channel: string): void {
+    console.log(`Subscribed to channel ${channel}!`);
+    this.hubConnection.send("Subscribe", channel);
+  }
+
+  public unsubscribe(channel: string): void {
+    console.log(`Unsubscribed from channel ${channel}!`);
+    this.hubConnection.send("Unsubscribe", channel);
   }
 
   public sendMessage(channel: string, message: any): void {

@@ -18,8 +18,6 @@ export class ChatsComponent implements OnInit {
   private createdChatSubscription: Subscription;
   
   private createdMessageSubscription: Subscription;
-  private updatedMessageSubscription: Subscription;
-  private deletedMessageSubscription: Subscription;
 
   chats: Chat[] = [];
 
@@ -31,8 +29,6 @@ export class ChatsComponent implements OnInit {
               private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.chatService.connect();
-
     this.createdChatSubscription = this.chatService.receiveChat.subscribe((chat: Chat) => {
       this.chats.unshift(chat);
       this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
@@ -45,21 +41,6 @@ export class ChatsComponent implements OnInit {
       }
     });
 
-    this.updatedMessageSubscription = this.messageService.receiveMessageUpdatedEvent.subscribe((message: Message) => {
-      console.log("receiveMessageUpdatedEvent");  // TODO: remove log!
-      if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
-        let index = this.selectedChat.messages.findIndex(m => m.id === message.id);
-        this.selectedChat.messages[index] = message;
-      }
-    });
-
-    this.deletedMessageSubscription = this.messageService.receiveMessageDeletedEvent.subscribe((message: Message) => {
-      console.log("receiveMessageDeletedEvent");  // TODO: remove log!
-      if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
-        this.selectedChat.messages.filter(m => m.id === message.id).pop();
-      }
-    });
-
     this.getChats();
   }
 
@@ -67,17 +48,13 @@ export class ChatsComponent implements OnInit {
     this.createdChatSubscription.unsubscribe();
     
     this.createdMessageSubscription.unsubscribe();
-    this.updatedMessageSubscription.unsubscribe();
-    this.deletedMessageSubscription.unsubscribe();
-    
-    this.chatService.disconnect();
   }
 
   onSelect(chat: Chat): void {
     if (this.selectedChat) {
-      this.chatService.unsubscribe(chat.guid);
+      this.messageService.unsubscribe(chat.guid);
     }
-    this.chatService.subscribe(chat.guid);  // WARN: ENSURE UNIQUENESS OF GROUP NAMES
+    this.messageService.subscribe(chat.guid);  // WARN: ENSURE UNIQUENESS OF GROUP NAMES
     this.chatService.getChat(chat.id).subscribe((chatWithMessages: ChatWithMessages) => this.selectedChat = chatWithMessages);
   }
 

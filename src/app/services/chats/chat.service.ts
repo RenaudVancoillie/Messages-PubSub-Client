@@ -14,41 +14,33 @@ export class ChatService {
 
   private url: string = 'https://localhost:44332';
   private hub: string = 'https://localhost:44354';
-  private chatHubConnection: signalR.HubConnection;
-  private messageHubConnection: signalR.HubConnection;
+  private hubConnection: signalR.HubConnection;
 
   public receiveChat: Subject<Chat>;
 
   constructor(private http: HttpClient) { 
     this.receiveChat = new Subject();
+
+    this.connect();
   }
 
   public connect(): void {
-    this.chatHubConnection = new signalR.HubConnectionBuilder()
+    this.hubConnection = new signalR.HubConnectionBuilder()
       .withAutomaticReconnect()
       .withUrl(`${this.hub}/hubs/chat`)
       .build();
 
-    this.messageHubConnection = new signalR.HubConnectionBuilder()
-      .withAutomaticReconnect()
-      .withUrl(`${this.hub}/hubs/messages`)
-      .build();
-    
-    this.chatHubConnection.on("ChatCreatedEvent", (chat: Chat) => {
+    this.hubConnection.on("ChatCreatedEvent", (chat: Chat) => {
       this.receiveChat.next(chat);
     });
 
-    this.chatHubConnection.start()
+    this.hubConnection.start()
       .then(() => console.log("Connected with the chat hub!"))
       .catch(error => console.error("Error while trying to connect to the chat hub: ", error));
-    
-    this.messageHubConnection.start()
-    .then(() => console.log("Connected with the messages hub!"))
-    .catch(error => console.error("Error while trying to connect to the messages hub: ", error));
   }
 
   public disconnect(): void {
-    this.chatHubConnection.stop()
+    this.hubConnection.stop()
       .then(() => console.log("Disonnected from the chat hub!"))
       .catch(error => console.error("Error while trying to disconnect from the app hub: ", error));
   }
@@ -67,19 +59,9 @@ export class ChatService {
     );
   }
 
-  public subscribe(channel: string): void {
-    console.log(`Subscribed to channel ${channel}!`);
-    this.messageHubConnection.send("Subscribe", channel);
-  }
-
-  public unsubscribe(channel: string): void {
-    console.log(`Unsubscribed from channel ${channel}!`);
-    this.messageHubConnection.send("Unsubscribe", channel);
-  }
-
   public createChat(name: string): void {
     console.log(`Creating chat ${name}`);
-    this.chatHubConnection.send("CreateChat", {name: name});
+    this.hubConnection.send("CreateChat", {name: name});
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

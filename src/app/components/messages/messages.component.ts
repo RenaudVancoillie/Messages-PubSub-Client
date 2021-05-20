@@ -16,18 +16,12 @@ export class MessagesComponent implements OnInit {
 
   constructor(private messageService: MessageService) { }
 
-  ngOnInit(): void {
-    this.messageService.connect();
-  }
+  ngOnInit(): void { }
 
-  ngOnDestory(): void {
-    this.messageService.disconnect();
-  }
+  ngOnDestory(): void { }
 
   public sendMessage() {
     this.messageService.sendMessage(this.channel, {chatId: this.chatId, sender: this.name, text: this.message});
   }
-
-  // TODO: add updateMessage and deleteMessage
 
 }
