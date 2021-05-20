@@ -54,12 +54,10 @@ export class MessageService {
   }
 
   public subscribe(channel: string): void {
-    console.log(`Subscribed to channel ${channel}!`);
     this.hubConnection.send("Subscribe", channel);
   }
 
   public unsubscribe(channel: string): void {
-    console.log(`Unsubscribed from channel ${channel}!`);
     this.hubConnection.send("Unsubscribe", channel);
   }
 

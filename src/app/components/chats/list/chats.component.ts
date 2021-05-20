@@ -37,7 +37,6 @@ export class ChatsComponent implements OnInit {
     });
 
     this.createdMessageSubscription = this.messageService.receiveMessageCreatedEvent.subscribe((message: Message) => {
-      console.log("receiveMessageCreatedEvent");  // TODO: remove log!
       if(this.selectedChat !== null && this.selectedChat.id === message.chatId) {
         this.selectedChat.messages.push(message);
       }

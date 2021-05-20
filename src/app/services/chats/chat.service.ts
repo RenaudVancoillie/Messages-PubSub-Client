@@ -60,7 +60,6 @@ export class ChatService {
   }
 
   public createChat(name: string): void {
-    console.log(`Creating chat ${name}`);
     this.hubConnection.send("CreateChat", {name: name});
   }
 

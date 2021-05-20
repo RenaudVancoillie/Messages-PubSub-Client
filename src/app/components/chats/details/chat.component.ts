@@ -40,6 +40,9 @@ export class ChatComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.chat = changes.chat.currentValue;
+
+    this.editing = false;
+    this.editingId = -1;
   }
 
   ngOnDestroy(): void {

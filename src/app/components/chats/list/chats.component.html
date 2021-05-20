@@ -3,11 +3,13 @@
     <input id="chat-name" [(ngModel)]="name" placeholder="name">
     <button (click)="createChat()">Create chat!</button>
 </div>
-<div *ngIf="chats">
-    <ul class="chats">
+<div *ngIf="chats" class="chats-container">
+    <ul class="chats-overview">
         <li *ngFor="let chat of chats" (click)="onSelect(chat)"
         [class.selected]="selectedChat && chat.id === selectedChat.id">{{chat.name}}</li>
     </ul>
-    <app-chat *ngIf="selectedChat" [chat]="selectedChat"></app-chat>
-    <app-messages *ngIf="selectedChat" [chatId]="selectedChat.id" [channel]="selectedChat.guid"></app-messages>
+    <div *ngIf="selectedChat" class="selected-chat">
+        <app-chat [chat]="selectedChat"></app-chat>
+        <app-messages [chatId]="selectedChat.id" [channel]="selectedChat.guid"></app-messages>
+    </div>
 </div>

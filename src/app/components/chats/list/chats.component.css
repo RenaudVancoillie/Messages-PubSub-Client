@@ -1,3 +1,36 @@
+/* Layout style */
+.chats-container {
+    margin-top: 1rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    grid-template-rows: auto;
+    grid-template-areas: "as mn"
+}
+.chats-overview {
+    grid-area: as;
+    margin: 0;
+}
+.selected-chat {
+    grid-area: mn;
+    background-color: rgb(144, 188, 233);
+    padding: 1rem;
+}
+
+/* Detailed */
+.chats-container ul {
+    padding-inline-start: 0;
+}
+.chats-overview li {
+    padding: 0.5rem;
+}
+.chats-overview li:hover {
+    background-color: rgb(168, 173, 179);
+}
 .selected {
-    background-color: hotpink;
+    color: white;
+    background-color: #369;
+}
+input {
+    margin-right: 0.5rem;
 }

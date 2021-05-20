@@ -1,3 +1,9 @@
+h2 {
+    font-weight: bold   ;
+}
 i {
     cursor: pointer;
+}
+.messages ul li {
+    padding-bottom: 1rem;
 }
