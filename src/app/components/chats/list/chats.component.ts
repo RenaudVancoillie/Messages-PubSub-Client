@@ -19,6 +19,8 @@ export class ChatsComponent implements OnInit {
   
   private createdMessageSubscription: Subscription;
 
+  private readonly MAX_CHAT_LENGTH = 16;
+
   chats: Chat[] = [];
 
   selectedChat?: ChatWithMessages;
@@ -64,7 +66,11 @@ export class ChatsComponent implements OnInit {
   }
 
   createChat(): void {
-    this.chatService.createChat(this.name); // WARN: INPUT VALIDATION
+    if(this.name.length <= this.MAX_CHAT_LENGTH) {
+      this.chatService.createChat(this.name); // WARN: INPUT VALIDATION
+    } else {
+      console.error(`Chat name maximum length of ${this.MAX_CHAT_LENGTH} characters exceeded.`);
+    }
   }
 
 }

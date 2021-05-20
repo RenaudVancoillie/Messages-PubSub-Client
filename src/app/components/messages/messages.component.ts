@@ -14,6 +14,8 @@ export class MessagesComponent implements OnInit {
   name: string = '';
   message: string = '';
 
+  private readonly MAX_SENDER_LENGTH = 24;
+
   constructor(private messageService: MessageService) { }
 
   ngOnInit(): void { }
@@ -21,7 +23,11 @@ export class MessagesComponent implements OnInit {
   ngOnDestory(): void { }
 
   public sendMessage() {
-    this.messageService.sendMessage(this.channel, {chatId: this.chatId, sender: this.name, text: this.message});
+    if(this.name.trim().length > 0 && this.name.length <= this.MAX_SENDER_LENGTH) {
+      this.messageService.sendMessage(this.channel, {chatId: this.chatId, sender: this.name, text: this.message});
+    } else {
+      console.error(`Sender name maximum length of ${this.MAX_SENDER_LENGTH} characters exceeded.`);
+    }
   }
 
 }
